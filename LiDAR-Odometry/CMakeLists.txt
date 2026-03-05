@@ -18,6 +18,9 @@ find_package(pcl_conversions REQUIRED)
 find_package(tf2 REQUIRED)
 find_package(tf2_eigen REQUIRED)
 
+find_package(tf2_geometry_msgs REQUIRED)
+find_package(message_filters REQUIRED)
+
 # uncomment the following section in order to fill in
 # further dependencies manually.
 # find_package(<dependency> REQUIRED)
@@ -39,6 +42,16 @@ ament_target_dependencies(lidar_odometry_node
   tf2_eigen
 )
 
+add_executable(scan_corrector_node src/scan_corrector_node.cpp)
+ament_target_dependencies(scan_corrector_node
+  rclcpp
+  sensor_msgs
+  message_filters
+  tf2
+  tf2_geometry_msgs
+)
+
+
 target_include_directories(lidar_odometry_node PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>)
@@ -46,8 +59,15 @@ target_include_directories(lidar_odometry_node PUBLIC
 target_link_libraries(lidar_odometry_node
   ${PCL_LIBRARIES}
 )
-install(TARGETS lidar_odometry_node
+install(TARGETS 
+  lidar_odometry_node
+  scan_corrector_node
   DESTINATION lib/${PROJECT_NAME})
+
+# 安装 launch 文件夹（待会要用到）
+install(DIRECTORY launch
+  DESTINATION share/${PROJECT_NAME}
+)
 
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)

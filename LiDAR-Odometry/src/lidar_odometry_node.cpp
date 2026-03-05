@@ -63,7 +63,7 @@ class LidarOdometryNode : public rclcpp::Node
         // this->declare_parameter<std::string>("odom_topic_name", "scan_odom");
 
         this->declare_parameter<std::string>("scan_topic_name", "scan");
-        this->declare_parameter<std::string>("odom_topic_name", "odom");
+        this->declare_parameter<std::string>("odom_topic_name", "scan_odom");
       }
 
       void scan_callback(const sensor_msgs::msg::LaserScan::SharedPtr scan_msg) {
@@ -80,7 +80,7 @@ class LidarOdometryNode : public rclcpp::Node
 
       void publish_odometry(const rclcpp::Time & stamp) {
         auto state = lidar_odometry_ptr->get_state();
-        std::string fixed_id = "odom";
+        std::string fixed_id = "scan_odom";
         std::string child_id = "base_Link"; 
         auto now = stamp;
 
